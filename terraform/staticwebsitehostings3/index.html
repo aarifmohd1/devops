@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aarif's Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .profile-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            animation: fadeIn 1.5s ease;
+        }
+        h1, h2 {
+            color: #4CAF50;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .reviews {
+            margin-top: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .profile-image {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4CAF50;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .highlight {
+            font-weight: bold;
+            color: #FF5722;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Aarif's Profile</h1>
+    </header>
+
+    <div class="profile-container">
+        <img src="image.jpg" alt="Aarif's Profile Picture" class="profile-image">
+        <h2>About Aarif</h2>
+        <p>Aarif is a dedicated professional with a passion for innovation and problem-solving. He has been involved in several impactful projects that showcase his expertise and dedication.</p>
+
+        <h2>Projects</h2>
+        <ul>
+            <li><span class="highlight">Project 1:</span> Employee Shift and Leave Reconciliation - Designed and implemented a process for reconciling employee shifts and leave records using DB2 and Python on Cirrus Cloud.</li>
+            <li><span class="highlight">Project 2:</span> Revenue Assurance for MTN South Africa - Developed an aggregation module for processing CDRs with optimized database parameters and automation scripts.</li>
+            <li><span class="highlight">Project 3:</span> Video File Transfer System - Researched and implemented solutions for transferring large video files over the internet without paid services.</li>
+        </ul>
+
+        <h2>Reviews</h2>
+        <div class="reviews">
+            <p><strong>John Doe:</strong> "Aarif's work on the shift reconciliation project was outstanding. His attention to detail and innovative approach stood out."
+            </p>
+            <p><strong>Jane Smith:</strong> "Working with Aarif has been a pleasure. His solutions are always efficient and well-thought-out."
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Aarif's Profile. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
