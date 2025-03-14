@@ -31,12 +31,12 @@ jobs:
   promote_service:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: checkout-code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.TEAM_GITHUB_TOKEN }}
-          fetch-depth: 0
+    # steps:
+    #   - name: checkout-code
+    #     uses: actions/checkout@v4
+    #     with:
+    #       token: ${{ secrets.TEAM_GITHUB_TOKEN }}
+    #       fetch-depth: 0
 
       - name: Clone repository, create branch, add file, and push
         run: |
