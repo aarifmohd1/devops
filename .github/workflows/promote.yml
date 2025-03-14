@@ -41,7 +41,7 @@ jobs:
       - name: Clone repository, create branch, add file, and push
         run: |
           # Set variables
-          REPO_URL="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aarifmohd1/${{ github.repository }}.git"
+          REPO_URL="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aarifmohd1/devops.git"
           NEW_BRANCH="feature-branch"
           
           # Clone the repository using the token
