@@ -2,46 +2,46 @@ name: Promote services
 
 on:
   workflow_dispatch:
-    inputs:
-      promote_environments:
-        type: choice
-        description: Choose environments
-        required: true
-        options:
-          - dev to test
-          - test to qa
-          - qa to prod
-      services:
-        description: Service names seperated by comma (use ALL for any service or CONFIG_ONLY for configuration updates)
-        required: true
-        default: service1, service2, service3
-      ado-work-item-nbr:
-        description: ADO work item number
-        required: true
-      branch:
-        description: Branch to promote in (use none to create new branch)
-        required: false
-        default: none
-env:
-  PROMOTE_ENVIRONMENTS: ${{ github.event.inputs.promote_environments }}
-  SERVICES: ${{github.event.inputs.services}}
-  STORY: ${{github.event.inputs.ado-work-item-nbr}}
+#     inputs:
+#       promote_environments:
+#         type: choice
+#         description: Choose environments
+#         required: true
+#         options:
+#           - dev to test
+#           - test to qa
+#           - qa to prod
+#       services:
+#         description: Service names seperated by comma (use ALL for any service or CONFIG_ONLY for configuration updates)
+#         required: true
+#         default: service1, service2, service3
+#       ado-work-item-nbr:
+#         description: ADO work item number
+#         required: true
+#       branch:
+#         description: Branch to promote in (use none to create new branch)
+#         required: false
+#         default: none
+# env:
+#   PROMOTE_ENVIRONMENTS: ${{ github.event.inputs.promote_environments }}
+#   SERVICES: ${{github.event.inputs.services}}
+#   STORY: ${{github.event.inputs.ado-work-item-nbr}}
 
 jobs:
   promote_service:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: checkout-code
-      #   uses: actions/checkout@v4
-      #   with:
-      #     token: ${{ secrets.TEAM_GITHUB_TOKEN }}
-      #     fetch-depth: 0
+      - name: checkout-code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.TEAM_GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Clone repository, create branch, add file, and push
         run: |
           # Set variables
-          REPO_URL="https://x-access-token:${{ secrets.TEAM_GITHUB_TOKEN }}@github.com/aarifmohd1/devops.git"
+          REPO_URL="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aarifmohd1/devops.git"
           NEW_BRANCH="feature-branch"
           
           # Clone the repository using the token
@@ -60,34 +60,7 @@ jobs:
           git push origin $NEW_BRANCH
         env:
           GITHUB_TOKEN: ${{ secrets.TEAM_GITHUB_TOKEN }}
-      # - name: Setup Python script
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: 3.11
 
-      # - name: install-dependencies
-      #   run: |
-      #     pip install -r $GITHUB_WORKSPACE/promote-scripts/requirements.txt
-
-      # - name: run-promote-script
-      #   run: |
-      #     maincommit=$(git rev-parse main)
-      #     branchcommit=$(git rev-parse HEAD)
-      #     export BRANCH_COMMITS=$(git log --pretty="format:%ai;%s" $maincommit..$branchcommit --)
-
-      #     echo "1 $maincommit"
-      #     echo "2 $branchcommit"
-      #     echo "3 $BRANCH_COMMITS"
-
-
-      #     set +e
-      #     python $GITHUB_WORKSPACE/promote-scripts/promote.py > script.log
-      #     res=$?
-      #     cat script.log
-      #     exit $res
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.TEAM_GITHUB_TOKEN }}
-      #     ADO_TOKEN: ${{ secrets.ADO_TOKEN }}
 
       - name: create-pr
         run: |
@@ -95,12 +68,12 @@ jobs:
           # rm script.log
 
           git add .
-          git commit -m "ci(${TARGET_ENV}): promote services (${STORY})"
+          git commit -m "ci(test): promote services (123456)"
           git push origin $NEW_BRANCH
 
-          gh pr create --base main --head $NEW_BRANCH --title "ci(${TARGET_ENV}): promote services (${STORY})" --body "Promote ${SERVICES} to ${TARGET_ENV}
+          gh pr create --base main --head $NEW_BRANCH --title "ci(test): promote services (12345)" --body "Promote serviceA to test
           Triggered by: ${{ github.actor }}
           # Script output:
           # ${SCRIPT_OUTPUT}"
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.TEAM_GITHUB_TOKEN }}
