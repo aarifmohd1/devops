@@ -1,0 +1,39 @@
+name: Clone and Modify Repo
+
+on: 
+  workflow_dispatch:  # Manually trigger the workflow
+
+jobs:
+  clone-and-modify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4  # Checks out the current repo
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions"
+          git config --global user.email "aarifmohd59@gmail.com"
+
+      - name: Clone the repository
+        env:
+          GH_TOKEN: ${{ secrets.TEAM_GITHUB_TOKEN }}
+        run: |
+          git clone https://$GH_TOKEN@github.com/aarifmohd1/devops.git cloned-repo
+          cd cloned-repo
+          git checkout -b new-branch
+
+      - name: Create a file and commit
+        run: |
+          cd cloned-repo
+          echo "This is a test file" > abc.txt
+          git add abc.txt
+          git commit -m "Added abc.txt"
+
+      - name: Push the new branch
+        env:
+          GH_TOKEN: ${{ secrets.TEAM_GITHUB_TOKEN }}
+        run: |
+          cd cloned-repo
+          git push origin new-branch
