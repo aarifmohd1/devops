@@ -54,16 +54,20 @@ jobs:
           else
             branch_name=${STORY}-promote-services-${target}
             git switch -c $branch_name
+            cat <<EOF >> myfile.txt
+            This is the first appended line.
+            This is the second appended line.
+            EOF
             echo "BRANCH_NAME=$branch_name" >> "$GITHUB_ENV"
           fi
         env:
           BRANCH: ${{github.event.inputs.branch}}
           STORY: ${{github.event.inputs.ado-work-item-nbr}}
 
-      - name: Setup Python script
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
+      # - name: Setup Python script
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.11
 
       # - name: install-dependencies
       #   run: |
