@@ -32,21 +32,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout-code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.TEAM_GITHUB_TOKEN }}
-          fetch-depth: 0
+      # - name: checkout-code
+      #   uses: actions/checkout@v4
+      #   with:
+      #     token: ${{ secrets.TEAM_GITHUB_TOKEN }}
+      #     fetch-depth: 0
 
       - name: Clone repository, create branch, add file, and push
         run: |
           # Set variables
-          REPO_URL="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aarifmohd1/devops.git"
+          #REPO_URL="https://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@github.com/aarifmohd1/devops.git"
+          git clone https://x-access-token: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@github.com/aarifmohd1/devops.git devops
           NEW_BRANCH="feature-branch"
           
-          # Clone the repository using the token
-          git clone $REPO_URL repo
-          cd repo
+          # # Clone the repository using the token
+          # git clone $REPO_URL repo
+          # cd repo
           
           # Create a new branch and switch to it
           git checkout -b $NEW_BRANCH
