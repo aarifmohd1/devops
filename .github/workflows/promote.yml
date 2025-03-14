@@ -54,10 +54,7 @@ jobs:
           else
             branch_name=${STORY}-promote-services-${target}
             git switch -c $branch_name
-            cat <<EOF >> myfile.txt
-            This is the first appended line.
-            This is the second appended line.
-            EOF
+            touch aarif.txt
             echo "BRANCH_NAME=$branch_name" >> "$GITHUB_ENV"
           fi
         env:
