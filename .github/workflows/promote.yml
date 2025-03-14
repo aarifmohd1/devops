@@ -1,0 +1,106 @@
+name: Promote services
+
+on:
+  workflow_dispatch:
+    inputs:
+      promote_environments:
+        type: choice
+        description: Choose environments
+        required: true
+        options:
+          - dev to test
+          - test to qa
+          - qa to prod
+      services:
+        description: Service names seperated by comma (use ALL for any service or CONFIG_ONLY for configuration updates)
+        required: true
+        default: service1, service2, service3
+      ado-work-item-nbr:
+        description: ADO work item number
+        required: true
+      branch:
+        description: Branch to promote in (use none to create new branch)
+        required: false
+        default: none
+env:
+  PROMOTE_ENVIRONMENTS: ${{ github.event.inputs.promote_environments }}
+  SERVICES: ${{github.event.inputs.services}}
+  STORY: ${{github.event.inputs.ado-work-item-nbr}}
+
+jobs:
+  promote_service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: checkout-branch
+        run: |
+          git config --global user.email "${{ github.event.sender.id }}+${{github.event.sender.login}}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+
+          target=${PROMOTE_ENVIRONMENTS/*to /}
+          echo "SOURCE_ENV=${PROMOTE_ENVIRONMENTS/ to*/}" >> "$GITHUB_ENV"
+          echo "TARGET_ENV=${target}" >> "$GITHUB_ENV"
+
+          if [[ "$BRANCH" != "none" ]]; then
+            git fetch
+            git checkout --progress --force -B $BRANCH refs/remotes/origin/$BRANCH
+            echo "BRANCH_NAME=$BRANCH" >> "$GITHUB_ENV"
+          else
+            branch_name=${STORY}-promote-services-${target}
+            git switch -c $branch_name
+            echo "BRANCH_NAME=$branch_name" >> "$GITHUB_ENV"
+          fi
+        env:
+          BRANCH: ${{github.event.inputs.branch}}
+          STORY: ${{github.event.inputs.ado-work-item-nbr}}
+
+      - name: Setup Python script
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      # - name: install-dependencies
+      #   run: |
+      #     pip install -r $GITHUB_WORKSPACE/promote-scripts/requirements.txt
+
+      # - name: run-promote-script
+      #   run: |
+      #     maincommit=$(git rev-parse main)
+      #     branchcommit=$(git rev-parse HEAD)
+      #     export BRANCH_COMMITS=$(git log --pretty="format:%ai;%s" $maincommit..$branchcommit --)
+
+      #     echo "1 $maincommit"
+      #     echo "2 $branchcommit"
+      #     echo "3 $BRANCH_COMMITS"
+
+
+      #     set +e
+      #     python $GITHUB_WORKSPACE/promote-scripts/promote.py > script.log
+      #     res=$?
+      #     cat script.log
+      #     exit $res
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.TEAM_GITHUB_TOKEN }}
+      #     ADO_TOKEN: ${{ secrets.ADO_TOKEN }}
+
+      - name: create-pr
+        run: |
+          # SCRIPT_OUTPUT=$(cat script.log)
+          # rm script.log
+
+          git add .
+          git commit -m "ci(${TARGET_ENV}): promote services (${STORY})"
+          git push origin $BRANCH_NAME
+
+          gh pr create --base main --head $BRANCH_NAME --title "ci(${TARGET_ENV}): promote services (${STORY})" --body "Promote ${SERVICES} to ${TARGET_ENV}
+          Triggered by: ${{ github.actor }}
+          # Script output:
+          # ${SCRIPT_OUTPUT}"
+        env:
+          GH_TOKEN: ${{ github.token }}
